@@ -2,21 +2,17 @@ import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-
-import { checkField } from '../../utils/utils';
-import { IError } from '../../api/types';
 import { registerUser } from '../../api/index';
+import { IError } from '../../api/types';
+import { checkField } from '../../utils/utils';
 import Button from '../../components/button/Button';
-
 import './Register.scss';
 
 export default function Register(props: any) {
-  const { history, location, match } = props;
-  // Fields
+  const { history } = props;
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  // Errors
   const [error, setError] = useState<IError[]>([]);
 
   async function handleSubmit(e: any) {

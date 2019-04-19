@@ -36,7 +36,7 @@ export default function Search(props: Props) {
   return (
     <div className="col-10 col-sm-8 col-md-6 col-lg-4 m-auto d-flex justify-content-center pt-2">
       <Box className="search" pose={hovered ? 'on' : 'off'} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-        <FontAwesomeIcon className="mt-1 mr-2" icon="search" />
+         <FontAwesomeIcon className="mt-1 mr-2" icon="search"/>
         <Input callback={search} />
       </Box>
     </div>

@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { IOrder, IOrderlines, IError } from '../../api/types';
+import { getOrder } from '../../api/index';
+
 import Spinner from '../../components/spinner/Spinner';
-import { IOrder, IOrderlines, IProduct } from '../../api/types';
-import { getOrder, getProduct } from '../../api/index';
+
+import NotFound from '../system-pages/NotFound';
+import NoAccess from '../system-pages/NoAccess';
 
 import './Order.scss';
 
 export default function Order(props: any) {
-  const { history, match } = props;
-
+  const { history, match, isUser, isAdmin } = props;
   const [order, setOrder] = useState<IOrder>({} as IOrder);
   const [orderlines, setOrderlines] = useState<IOrderlines[]>([]);
+
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<IError[]>([])
 
   useEffect(() => {
     const fetch = async () => {
-      const resultOrder = await getOrder(match.params.id);
-
-      setOrder(resultOrder.data);
-      setOrderlines(resultOrder.data.orderlines);
+      await getOrder(match.params.id)
+        .then((result) => {
+          if (!result.isOk) setError(result.data);
+          else {
+            setOrder(result.data);
+            setOrderlines(result.data.orderlines);
+          }
+        })
       setLoading(false);
-      console.info('order = ', resultOrder.data);
     }
     fetch();
   }, []);
@@ -29,12 +37,12 @@ export default function Order(props: any) {
   async function handleOnClick(e: any) {
     e.preventDefault();
     const id = e.currentTarget.id
-    history.push(`/orders/${id}`);
+    history.push(`/product/${id}`);
   }
 
+  if (!isUser || !isAdmin) return <NoAccess/>
+  if (error.length > 0) return <NotFound/>
   if (loading) return <Spinner />
-
-  console.info('orderlines = ', orderlines);
 
   return (
     <div className='order'>
@@ -65,7 +73,7 @@ export default function Order(props: any) {
         <tbody>
             {orderlines.map((item, i) => {
               return (
-                <tr key={i} id={`${item.id}`} onClick={handleOnClick}>
+                <tr key={i} id={`${item.product.id}`} onClick={handleOnClick}>
                   <td>{item.product.name}</td>
                   <td>{`${item.product.price} kr.`}</td>
                   <td>{item.quantity}</td>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { getCategories } from '../../api/index';
 import { ICategory } from '../../api/types';
 import CategoryContainer from './CategoryContainer';
 

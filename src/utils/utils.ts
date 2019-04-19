@@ -1,5 +1,11 @@
 import { IError } from '../api/types';
 
+interface IFetch {
+  data: any,
+  status: number,
+  isOk: Boolean,
+}
+
 // Localstorage - get jwt token
 const getToken = () => {
   return localStorage.getItem('jwt');
@@ -8,8 +14,8 @@ const getToken = () => {
 /**
  * Check if error is coming from field, for css purposes, to style with
  * invalid
- * @param arr
- * @param field
+ * @param arr - array of errors
+ * @param field - field to check
  */
 const checkField = (arr: IError[], field: string) => {
   return arr.find(err => err.field === field || err.field === 'all');
@@ -27,6 +33,10 @@ const asyncForEach = async (array: [], callback: Function) => {
   }
 }
 
+/**
+ * Get url
+ * @param request - url
+ */
 const http = async (request: RequestInfo) => {
   return await fetch(request, {
       method: 'GET',
@@ -36,14 +46,20 @@ const http = async (request: RequestInfo) => {
         'Authorization': `Bearer ${getToken()}`,
       },
     })
-      .then(async (response) => {
+      .then(async (response): Promise<IFetch> => {
         return {
           data: await response.json(),
-          status: response.ok
+          status: response.status,
+          isOk: response.ok,
         };
       })
 };
 
+/**
+ * Post url
+ * @param request - url
+ * @param data - data to post
+ */
 const httpPost = async (request: RequestInfo, data: any) => {
   return await fetch(request, {
       method: 'POST',
@@ -54,14 +70,20 @@ const httpPost = async (request: RequestInfo, data: any) => {
       },
       body: JSON.stringify(data)
     })
-      .then(async (response) => {
+      .then(async (response): Promise<IFetch> => {
         return {
           data: await response.json(),
-          status: response.ok
+          status: response.status,
+          isOk: response.ok,
         };
       })
 }
 
+/**
+ * Patch url
+ * @param request - url
+ * @param data - data to patch
+ */
 const httpPatch = async (request: RequestInfo, data: any) => {
   return await fetch(request, {
       method: 'PATCH',
@@ -72,14 +94,19 @@ const httpPatch = async (request: RequestInfo, data: any) => {
       },
       body: JSON.stringify(data)
     })
-      .then(async (response) => {
+      .then(async (response): Promise<IFetch> => {
         return {
           data: await response.json(),
-          status: response.ok
+          status: response.status,
+          isOk: response.ok,
         };
       })
 }
 
+/**
+ * Delete url
+ * @param request - url
+ */
 const httpDelete = async (request: RequestInfo) => {
   return await fetch(request, {
       method: 'DELETE',

@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
-
-import Spinner from '../../components/spinner/Spinner';
-import { IOrders } from '../../api/types';
+import { IOrders, IError } from '../../api/types';
 import { getOrders } from '../../api/index';
+import Spinner from '../../components/spinner/Spinner';
+import NotFound from '../system-pages/NotFound';
+import NoAccess from '../system-pages/NoAccess';
 
 import './Orders.scss';
 
 export default function Orders(props: any) {
-  const { history } = props;
-
+  const { history , isUser, isAdmin} = props;
   const [orders, setOrders] = useState<IOrders[]>([]);
+
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<IError[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
-      const result = await getOrders();
-
-      setOrders(result.data);
+      await getOrders()
+        .then((result) => {
+          if (!result.isOk) setError(result.data);
+          else setOrders(result.data);
+        })
       setLoading(false);
     }
     fetch();
@@ -28,6 +32,8 @@ export default function Orders(props: any) {
     history.push(`/orders/${id}`);
   }
 
+  if (!isUser || !isAdmin) return <NoAccess/>
+  if (error.length > 0) return <NotFound/>
   if (loading) return <Spinner />
 
   return (

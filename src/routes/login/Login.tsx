@@ -27,16 +27,16 @@ export default function Login(props: any) {
 
     const result = await loginUser(data);
 
-     // Login successful, set jwt token and redirect to '/'
-    if (result.status) {
-      setUser(result.data);
-      setIsUser(true);
-      setIsAdmin(result.data.admin);
-      localStorage.setItem('jwt', result.data.token);
-      history.push('/');
-    }
-    if (!result.status) setError(result.data); // Display errors if status is not ok
-  }
+    if (result.isOk) {
+          setUser(result.data);
+          setIsUser(true);
+          setIsAdmin(result.data.admin);
+          localStorage.setItem('jwt', result.data.token);
+          history.push('/');
+        }
+        if (!result.isOk) setError(result.data); // Display errors if status is not ok
+      }
+
 
   const userFieldClass = classNames({
     'login--form__field': true,

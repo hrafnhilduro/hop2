@@ -6,8 +6,7 @@ import './Header.scss';
 import { IAuth } from '../../api/types';
 
 export default function Home(props: IAuth) {
-  const { user, isUser, isAdmin, authLoading } = props;
-
+  const { user, isUser, authLoading } = props;
   return (
     <>
       <header className="col-12 header">

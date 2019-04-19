@@ -1,18 +1,16 @@
 import React, { useState, useEffect, Fragment, EffectCallback } from 'react';
 import Helmet from 'react-helmet';
 
+import { getProducts, getCategories } from '../../api/index';
 import { IProduct, ICategory } from '../../api/types';
 import Categories from '../../components/categories/Categories';
-import Product from '../../components/product/Product';
 import Products from '../../components/products/Products';
-import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
 
 import './Home.scss';
-import { getProducts, getProduct, getCategories, getCategory } from '../../api';
 
 export default function Home(props: any) {
-  const { initialProducts, initialProduct, initialCategories, initialCategory, location } = props;
+  const { initialProducts, initialCategories, location } = props;
 
   const [products, setProducts] = useState<IProduct[]>(initialProducts); // List of products
   const [categories, setCategories] = useState<ICategory[]>(initialCategories); // Current category

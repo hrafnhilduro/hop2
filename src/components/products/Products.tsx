@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import { IProduct, ICategory } from '../../api/types';
-import { getProducts, getCategory } from '../../api/index';
 
 import './Products.scss';
 import ProductContainer from './ProductContainer';

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import './Product.scss';
-import Input from '../input/NumberInput';
+// Api
 import { addToCart } from '../../api';
+// Components
+import Input from '../input/NumberInput';
+// ./
+import './Product.scss';
 
 interface Props {
   productid: number;
@@ -13,14 +15,17 @@ interface Props {
 export default function Cart(props: Props) {
   const { productid } = props;
   const [error, setError] = useState();
+  const [disabled, setDisabled] = useState(false);
 
   async function submit(e: any) {
     e.preventDefault();
+    setDisabled(true);
     const quantity = parseInt(e.target[0].value, 10);
     const results = await addToCart(productid, quantity);
     const { status } = results;
     if (status) setError(false);
     else setError(true);
+    setDisabled(false);
   }
 
   return (
@@ -30,7 +35,7 @@ export default function Cart(props: Props) {
           <Input />
         </div>
         <div className="col-6 p-0 pl-1 d-flex justify-content-center align-items-center">
-          <button className="btn btn-outline-info" type="submit">
+          <button className="btn btn-outline-info" type="submit" disabled={disabled}>
             <div className="cartIcon__container">
               <FontAwesomeIcon icon="cart-plus" size="lg" className="cartIcon text-info" />
             </div>

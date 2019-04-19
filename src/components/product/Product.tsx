@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { IProduct, ICategory, IUser } from '../../api/types';
+import { IProduct, IUser } from '../../api/types';
 
-import './Product.scss';
 import Cart from './AddToCart';
+import './Product.scss';
 
 interface Props {
   product: IProduct,
@@ -37,7 +37,11 @@ export default function Product(props: Props) {
             ) : null}
 
             <div className="product__info--item">
-              <p>{product.description}</p>
+              {product.description.split('\n').map((paragraph, i) => {
+                  return (
+                    <p key={i}>{paragraph}</p>
+                  )
+              })}
             </div>
 
           </div>

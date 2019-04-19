@@ -1,11 +1,13 @@
-import { string } from "prop-types";
-import { getProductsByCategoryId } from ".";
+//import { string } from "prop-types";
+//import { getProductsByCategoryId } from ".";
 
+// Category
 export interface ICategory {
   id: number;
   name: string;
 }
 
+// Product
 export interface IProduct {
   id: number;
   name: string;
@@ -13,11 +15,12 @@ export interface IProduct {
   image: string;
   category: ICategory;
   categoryid: number;
-  description?: string;
+  description: string;
   created?: Date;
   updated?: Date;
 }
 
+// Single orderline
 export interface IOrderline {
   id: number;
   orderid: number;
@@ -27,6 +30,7 @@ export interface IOrderline {
   updated: string;
 }
 
+// Products in an order
 export interface IOrderlines {
   id: number;
   orderid: number;
@@ -38,6 +42,7 @@ export interface IOrderlines {
   updated?: Date;
 }
 
+// Order info and products in orderline
 export interface IOrder {
   id: number;
   userid: number;
@@ -50,6 +55,7 @@ export interface IOrder {
   updated?: Date;
 }
 
+// Multiple orders
 export interface IOrders {
   id: number;
   userid: number;
@@ -60,6 +66,7 @@ export interface IOrders {
   updated?: Date;
 }
 
+// User
 export interface IUser {
   admin: boolean;
   email: string;
@@ -67,6 +74,7 @@ export interface IUser {
   username: string;
 }
 
+// Authorization
 export interface IAuth {
   user: IUser;
   isUser: boolean;
@@ -76,9 +84,9 @@ export interface IAuth {
   history?: any;
 }
 
+// Error messages
 export interface IError {
   errors: string[],
   field: string;
   location: string;
 }
-// todo fleiri týpur

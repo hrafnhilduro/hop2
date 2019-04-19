@@ -13,7 +13,6 @@ interface IButtonProps {
 export default function Button(props: IButtonProps) {
   const { children, onClick = () => {}, disabled = false, className = '', small = false } = props;
 
-  // væri líka hægt að nota `classnames` pakka
   const classes = [
     'button', className ? className : null,
     disabled ? 'button--disabled' : null,

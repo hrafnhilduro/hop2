@@ -1,23 +1,22 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import Helmet from 'react-helmet';
-
-import { IProduct, ICategory, IAuth } from '../../api/types';
+import { getProductsByCategoryId, getProduct } from '../../api';
+import { IProduct, IAuth, IError } from '../../api/types';
 import Product from '../../components/product/Product';
 import Products from '../../components/products/Products';
-import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
+import NotFound from '../system-pages/NotFound';
 
 import './Product.scss';
-import { getProductsByCategoryId, getProduct, getCategory, } from '../../api';
 
 export default function Home(props: IAuth) {
-  const { id } = props.match.params;
-  const { user, isUser, isAdmin, authLoading } = props;
-
+  const { user, isUser, match } = props;
+  const { id } = match.params;
   const [product, setProduct] = useState<IProduct>({} as IProduct); // Currently showcased product
   const [products, setProducts] = useState<IProduct[]>(); // List of products
   const [loading, setLoading] = useState(true);
   const [partialLoading, setPartialLoading] = useState(false);
+  const [error, setError] = useState<IError[]>([]);
 
   useEffect(() => {
     fetchData(id);
@@ -25,10 +24,19 @@ export default function Home(props: IAuth) {
 
   async function fetchData(id: number) {
     window.scrollTo(0, 0);
-    const resultProduct = await getProduct(id);
-    setProduct(resultProduct.data);
-    const resultProducts = await getProductsByCategoryId(resultProduct.data.categoryid);
-    setProducts(resultProducts.data);
+    await getProduct(id)
+      .then(async (result) => {
+        if (!result.isOk) setError(result.data);
+        else {
+          setProduct(result.data);
+          await getProductsByCategoryId(result.data.categoryid)
+            .then((result) => {
+              if (!result.isOk) setError(result.data);
+              else setProducts(result.data)
+            })
+        }
+      })
+
     setLoading(false);
     setPartialLoading(false);
   }
@@ -38,6 +46,7 @@ export default function Home(props: IAuth) {
     fetchData(id);
   }
 
+  if (error.length > 0) return <NotFound/>
   if (loading) return <Spinner />
 
   return (
@@ -72,8 +81,6 @@ export default function Home(props: IAuth) {
         products={products || []}
         update={update}
       />
-
-      <Button>asd</Button>
     </Fragment>
   );
 }
